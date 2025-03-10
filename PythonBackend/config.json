@@ -1,0 +1,11 @@
+{
+    "models": [
+      {
+        "name": "iris_segmentation",
+        "path": "./models/segmentation/model.json",
+        "input_shape": [192, 192, 1],
+        "output_format": "mask"
+      }
+    ]
+  }
+  
