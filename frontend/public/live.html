@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+</head>
+<body>
+
+<h2>Capture Image from Camera</h2>
+
+<video id="video" width="320" height="240" autoplay></video>
+<br>
+<button id="capture">Capture Image</button>
+<br>
+<canvas id="imageCanvas" style="display:none;"></canvas>
+<br>
+<img id="capturedImage" src="" alt="Captured Image">
+
+<br><br>
+<button onclick="sendImage()">Send Image to Server</button>
+
+<script>
+    // Access the user's camera and stream it to the video element
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const capturedImage = document.getElementById('capturedImage');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error("Error accessing camera: ", err);
+        });
+
+    // Capture the image from the video stream when the button is clicked
+    document.getElementById('capture').addEventListener('click', function() {
+        // Draw the current video frame to the canvas
+        canvas.width = 192;
+        canvas.height = 192;
+        ctx.drawImage(video, 0, 0, 192, 192);
+
+        // Convert to grayscale
+        let imageData = ctx.getImageData(0, 0, 192, 192);
+        let data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            let grayscale = data[i] * 0.3 + data[i + 1] * 0.59 + data[i + 2] * 0.11;
+            data[i] = data[i + 1] = data[i + 2] = grayscale; // Set RGB to the grayscale value
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+
+        // Display the captured grayscale image
+        capturedImage.src = canvas.toDataURL('image/png');
+    });
+
+    // Function to send the image to the server
+    function sendImage() {
+        canvas.toBlob(function(blob) {
+            let formData = new FormData();
+            formData.append('image', blob, 'image.bmp');
+
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Handle the response data (render the images, etc.)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }, 'image/bmp'); // Export as BMP
+    }
+</script>
+
+</body>
+</html>
