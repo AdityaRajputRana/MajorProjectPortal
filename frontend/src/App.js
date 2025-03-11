@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import UploadImage from './components/UploadImage';
 import CaptureImage from './components/CaptureImage';
+import './App.css'; // Import the CSS file for styling
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,14 +16,18 @@ const Home = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Select an Action</h2>
-      <button onClick={handleNavigateToUpload} style={{ marginRight: '10px', padding: '10px 20px' }}>
-        Upload Image
-      </button>
-      <button onClick={handleNavigateToCapture} style={{ padding: '10px 20px' }}>
-        Capture Image
-      </button>
+    <div className="home-container">
+      <h1>Group 17's Major Project</h1>
+      <h2>Alcohol Detection with NIR Iris Images: Model Comparison</h2>
+      <p>This is a simple web-based tool to use the different models that we have trained.</p>
+      <div className="button-container">
+        <button className="action-button" onClick={handleNavigateToUpload}>
+          Upload Image
+        </button>
+        <button className="action-button" onClick={handleNavigateToCapture}>
+          Capture Image
+        </button>
+      </div>
     </div>
   );
 };

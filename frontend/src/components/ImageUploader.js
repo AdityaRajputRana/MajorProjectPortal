@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function App() {
+function App({ selectedModel, onResult }) {
   const [image, setImage] = useState(null);
   const [mask, setMask] = useState(null);
   const [overlay, setOverlay] = useState(null);
@@ -15,6 +15,7 @@ function App() {
   const submitFiles = async () => {
     const formData = new FormData();
     formData.append("image", document.querySelector("#imageInput").files[0]);
+    formData.append("model", selectedModel);
 
     try {
       const response = await fetch("http://127.0.0.1:5000/predict", {
@@ -24,9 +25,7 @@ function App() {
       const result = await response.json();
 
       // Set received images as base64 for rendering
-      setImage(result.image);
-      setMask(result.mask);
-      setOverlay(result.overlay);
+      onResult(result)
     } catch (error) {
       console.error("Error uploading files:", error);
     }
