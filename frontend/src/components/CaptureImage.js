@@ -1,12 +1,14 @@
-// CaptureImage.js
 import React, { useState, useRef } from 'react';
 import ResultDisplay from './ResultDisplay';
+import './CaptureImage.css'; // Import the CSS file for styling
+import ModelSelector from './ModelSelector';
+
 const CaptureImage = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [model, setSelectedModel] = useState(null);
   const [result, setResult] = useState(null);
-
 
   // Access the user's camera when the component mounts
   React.useEffect(() => {
@@ -40,7 +42,6 @@ const CaptureImage = () => {
 
     ctx.putImageData(imageData, 0, 0);
 
-    // Convert canvas to base64 URL and set as captured image
     setCapturedImage(canvas.toDataURL('image/png'));
   };
 
@@ -50,6 +51,7 @@ const CaptureImage = () => {
     canvas.toBlob((blob) => {
       const formData = new FormData();
       formData.append('image', blob, 'image.bmp');
+      formData.append('model', model); 
 
       fetch('http://127.0.0.1:5000/predict', {
         method: 'POST',
@@ -58,7 +60,7 @@ const CaptureImage = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        setResult(data)
+        setResult(data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -67,17 +69,22 @@ const CaptureImage = () => {
   };
 
   return (
-    <div>
+    <div className="capture-container">
       <h2>Capture Image from Camera</h2>
-      <video ref={videoRef} width="320" height="240" autoPlay />
+      <ModelSelector onModelSelect={setSelectedModel} />
+      <div><br></br></div>
+      <div className="warning-note">
+        <p className='warning-text'>Note: The current camera is not an LG NIR Iris Cam, so the results of this experiment may be inaccurate.</p>
+      </div>
+      <video ref={videoRef} width="320" height="240" autoPlay className="video-stream" />
       <br />
-      <button onClick={captureImage}>Capture Image</button>
+      <button className="action-button" onClick={captureImage}>Capture Image</button>
       <br />
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       <br />
-      {capturedImage && <img src={capturedImage} alt="Captured" />}
+      {capturedImage && <img src={capturedImage} alt="Captured" className="captured-image" />}
       <br />
-      <button onClick={sendImage}>Send Image to Server</button>
+      <button className="action-button" onClick={sendImage}>Send Image to Server</button>
       {result && <ResultDisplay result={result} />}
     </div>
   );

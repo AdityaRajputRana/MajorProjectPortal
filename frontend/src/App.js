@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <h1>Group 17's Major Project</h1>
+      <h1>Portal</h1>
       <h2>Alcohol Detection with NIR Iris Images: Model Comparison</h2>
       <p>This is a simple web-based tool to use the different models that we have trained.</p>
       <div className="button-container">

@@ -4,9 +4,15 @@ const ResultDisplay = ({ result }) => {
   return result && (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       {result.prediction && (
-        <div style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
+        <div style={{ fontSize: "24px", fontWeight: "bold" }}>
           {result.prediction}
         </div>
+      )}
+
+      {result.prediction && (
+        (result.confidence && <div style={{ fontSize: "16px", marginBottom: "20px" }}>
+          {result.confidence} Confidence
+        </div> )
       )}
       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
         <img src={`data:image/png;base64,${result.image}`} alt="Uploaded Image" width="300" />

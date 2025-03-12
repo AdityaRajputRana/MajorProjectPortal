@@ -40,14 +40,17 @@ def preprocess_image(image_path, input_shape):
     return img
 
 def process_text_output(prediction, image):
-    prediction = np.argmax(prediction[0])
-    prediction = 'Alcoholic' if prediction else 'Fit for duty'
+    prediction_result = np.argmax(prediction[0])
+    prediction_confidence = prediction[0][prediction_result]
+    prediction_confidence = "High" if prediction_confidence > 0.75 else "Low"
+    prediction = 'Alcoholic' if prediction_result else 'Fit for duty'
 
     image_base64 = image_to_base64(image)
 
     return jsonify({
         "image": image_base64, 
-        "prediction": str(prediction)
+        "prediction": str(prediction),
+        "confidence": str(prediction_confidence)
     })
 
 
