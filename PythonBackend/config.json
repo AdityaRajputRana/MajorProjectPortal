@@ -5,13 +5,22 @@
         "path": "./Model/segment.h5",
         "input_shape": [192, 192, 1],
         "output_format": "mask",
+        "modelType":"h5",
         "output_shape": [192, 192, 1]
       },
       {
         "name": "2LayeredCNNModel",
         "path": "./Model/2LayeredCNNAugmented.h5",
         "input_shape": [320, 240, 1],
+        "modelType":"h5",
         "output_format": "text"
+      },
+      {
+        "name": "SVM_Lg",
+        "path": "./Model/svm_lg.pkl",
+        "input_shape": [120, 160, 0],
+        "modelType":"pkl",
+        "output_format": "bool"
       }
     ]
 }
